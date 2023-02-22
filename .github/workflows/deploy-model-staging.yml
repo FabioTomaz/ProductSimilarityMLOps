@@ -1,0 +1,35 @@
+# This GitHub workflow performs model deployment to staging
+# The workflow contents are largely the same as deploy-model-prod.yml but
+# we split staging and prod model deployment into separate workflows to simplify
+# separately tracking and viewing staging and prod model deployments via GitHub UI and API
+#
+# This workflow is triggered in an automated manner by the model training job (see notebooks/TriggerModelDeploy.py)
+# after model training completes, to enable tracking and enforcing manual approval of model deployments in
+# CD, if desired.
+name: Staging Model Deployment for my-mlops-project
+
+on:
+  workflow_dispatch:
+    inputs:
+      modelUri:
+        type: string
+        description: 'URI of model to deploy, in the format models:/<model-name>/<version-id>'
+        required: true
+
+env:
+  DATABRICKS_HOST: https://your-staging-workspace.cloud.databricks.com
+  NODE_TYPE_ID: i3.xlarge
+  DATABRICKS_TOKEN: ${{ secrets.STAGING_WORKSPACE_TOKEN }}
+jobs:
+  staging:
+    runs-on: ubuntu-20.04
+    environment: staging
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Deploy model
+        env:
+          MLFLOW_TRACKING_URI: databricks
+        run: |
+          pip install mlflow
+          python steps/deploy.py "${{ github.event.inputs.modelUri }}" "staging"
