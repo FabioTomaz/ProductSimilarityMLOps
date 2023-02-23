@@ -19,7 +19,7 @@ jobs:
     concurrency: my-mlops-project-staging-terraform-job
     runs-on: ubuntu-20.04
     env:
-      DATABRICKS_HOST: https://your-staging-workspace.cloud.databricks.com
+      DATABRICKS_HOST: https://dbc-38ce632c-4934.cloud.databricks.com
       DATABRICKS_TOKEN: ${{secrets.STAGING_WORKSPACE_TOKEN}}
     steps:
       - uses: actions/checkout@v3
@@ -79,7 +79,7 @@ jobs:
     needs: staging
     runs-on: ubuntu-20.04
     env:
-      DATABRICKS_HOST: https://your-prod-workspace.cloud.databricks.com
+      DATABRICKS_HOST: https://dbc-96a52355-626c.cloud.databricks.com
       DATABRICKS_TOKEN: ${{secrets.PROD_WORKSPACE_TOKEN}}
     steps:
       - uses: actions/checkout@v3

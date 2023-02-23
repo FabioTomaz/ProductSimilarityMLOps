@@ -9,8 +9,8 @@ MLflow registered model for the "my-mlops-project" ML Project. See the correspon
 
 Links:
 * [Git Repo](${var.git_repo_url}): contains ML code for the current project.
-* [Recurring model training job](https://your-prod-workspace.cloud.databricks.com#job/${databricks_job.model_training_job.id}): trains fresh model versions using the latest ML code.
+* [Recurring model training job](https://dbc-96a52355-626c.cloud.databricks.com#job/${databricks_job.model_training_job.id}): trains fresh model versions using the latest ML code.
 * [Model deployment pipeline](${var.git_repo_url}/actions/workflows/deploy-model-${local.env}.yml): deploys model versions produced by the training job.
-* [Recurring batch inference job](https://your-prod-workspace.cloud.databricks.com#job/${databricks_job.batch_inference_job.id}): applies the latest ${local.env} model version for batch inference.
+* [Recurring batch inference job](https://dbc-96a52355-626c.cloud.databricks.com#job/${databricks_job.batch_inference_job.id}): applies the latest ${local.env} model version for batch inference.
 EOF
 }

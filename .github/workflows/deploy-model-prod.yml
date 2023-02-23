@@ -17,7 +17,7 @@ on:
         required: true
 
 env:
-  DATABRICKS_HOST: https://your-prod-workspace.cloud.databricks.com
+  DATABRICKS_HOST: https://dbc-96a52355-626c.cloud.databricks.com
   NODE_TYPE_ID: i3.xlarge
   DATABRICKS_TOKEN: ${{ secrets.PROD_WORKSPACE_TOKEN }}
 jobs:
