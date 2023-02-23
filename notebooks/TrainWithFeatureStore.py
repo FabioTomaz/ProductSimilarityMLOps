@@ -30,7 +30,7 @@ dbutils.widgets.text("experiment_name", "/Shared/my-mlops-project/my-mlops-proje
 dbutils.widgets.text("model_name", "my-mlops-project-model-test", label="Model Name")
 
 # Feature table stage.
-dbutils.widgets.text("fs_stage", "", label="Input Feature Table Stage")
+dbutils.widgets.text("fs_stage", "_test", label="Input Feature Table Stage")
 
 # COMMAND ----------
 # DBTITLE 1,Define input and output variables
