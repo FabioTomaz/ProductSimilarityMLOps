@@ -83,11 +83,11 @@ From the repo root directory, run:
 
 ```
 # Set AWS_REGION environment variable to your desired AWS region for storing
-# terraform state, e.g. "us-east-1" to store Terraform state in S3 buckets in us-east-1
-# NOTE: if you supply an AWS region other than us-east-1, be sure to update the
+# terraform state, e.g. "eu-west-2" to store Terraform state in S3 buckets in eu-west-2
+# NOTE: if you supply an AWS region other than eu-west-2, be sure to update the
 # AWS region specified in databricks-config/staging/provider.tf and databricks-config/prod/provider.tf
 # to match
-export AWS_REGION="us-east-1"
+export AWS_REGION="eu-west-2"
 python .mlops-setup-scripts/terraform/bootstrap.py
 ```
 Then, run the following command, providing the required vars to bootstrap CI/CD.

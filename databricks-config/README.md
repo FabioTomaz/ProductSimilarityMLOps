@@ -64,7 +64,7 @@ the contents of `databricks-config` to the Git repo:
 git checkout -b add-ml-resource-config
 git add databricks-config
 git commit -m "Add ML resource config"
-git push upstream add-ml-resource-config
+git push upstream add-ml-resource-config 
 ```
 Open a pull request from the pushed branch. 
 CI will run and comment on the PR with a preview of the resources to be deployed.
