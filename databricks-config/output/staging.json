@@ -1,0 +1,27 @@
+{
+  "my-mlops-project_batch_inference_job_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "37682885484210"
+  },
+  "my-mlops-project_experiment_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "697345251172095"
+  },
+  "my-mlops-project_experiment_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "/Shared/my-mlops-project/staging-my-mlops-project-experiment"
+  },
+  "my-mlops-project_model_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "staging-my-mlops-project-model"
+  },
+  "my-mlops-project_training_job_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "320948044293349"
+  }
+}
