@@ -24,7 +24,7 @@
 dbutils.widgets.text("training_data_path", "/databricks-datasets/nyctaxi-with-zipcodes/subsampled", label="Path to the training data")
 
 # MLflow experiment name.
-dbutils.widgets.text("experiment_name", "/my-mlops-project-experiment-test", label="MLflow experiment name")
+dbutils.widgets.text("experiment_name", "/my-mlops-project/my-mlops-project-experiment-test", label="MLflow experiment name")
 
 # MLflow registered model name to use for the trained mode..
 dbutils.widgets.text("model_name", "my-mlops-project-model-test", label="Model Name")
