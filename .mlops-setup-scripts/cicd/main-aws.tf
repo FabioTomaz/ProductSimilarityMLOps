@@ -5,7 +5,7 @@ module "aws_create_sp" {
     databricks.prod    = databricks.prod
   }
   service_principal_name       = "my-mlops-project-cicd"
-  project_directory_path       = "/my-mlops-project"
+  project_directory_path       = "/Shared/my-mlops-project"
   service_principal_group_name = "my-mlops-project-service-principals"
 }
 
