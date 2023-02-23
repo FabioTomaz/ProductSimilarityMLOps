@@ -119,7 +119,8 @@ jobs:
                     "test_mode": "True",
                     "training_data_path": "/databricks-datasets/nyctaxi-with-zipcodes/subsampled",
                     "experiment_name": "/Shared/my-mlops-project/my-mlops-project-experiment-test",
-                    "model_name": "my-mlops-project-model-test"
+                    "model_name": "my-mlops-project-model-test",
+                    "fs_stage": "_test"
                   }
                 },
                 "new_cluster": {

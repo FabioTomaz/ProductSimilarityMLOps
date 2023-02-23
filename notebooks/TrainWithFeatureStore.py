@@ -29,12 +29,16 @@ dbutils.widgets.text("experiment_name", "/Shared/my-mlops-project/my-mlops-proje
 # MLflow registered model name to use for the trained mode..
 dbutils.widgets.text("model_name", "my-mlops-project-model-test", label="Model Name")
 
+# Feature table stage.
+dbutils.widgets.text("fs_stage", "", label="Input Feature Table Stage")
+
 # COMMAND ----------
 # DBTITLE 1,Define input and output variables
 
 input_table_path = dbutils.widgets.get("training_data_path")
 experiment_name = dbutils.widgets.get("experiment_name")
 model_name = dbutils.widgets.get("model_name")
+fs_stage = dbutils.widgets.get("fs_stage")
 
 # COMMAND ----------
 # DBTITLE 1, Set experiment
@@ -114,8 +118,8 @@ display(taxi_data)
 from databricks.feature_store import FeatureLookup
 import mlflow
 
-pickup_features_table = "feature_store_taxi_example.trip_pickup_features"
-dropoff_features_table = "feature_store_taxi_example.trip_dropoff_features"
+pickup_features_table = "feature_store_taxi_example.trip_pickup_features"+fs_stage
+dropoff_features_table = "feature_store_taxi_example.trip_dropoff_features"+fs_stage
 
 pickup_feature_lookups = [
     FeatureLookup(
