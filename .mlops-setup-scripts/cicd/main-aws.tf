@@ -15,13 +15,13 @@ data "databricks_current_user" "staging_user" {
 
 provider "databricks" {
   alias = "staging_sp"
-  host  = "https://your-staging-workspace.cloud.databricks.com"
+  host  = "https://dbc-38ce632c-4934.cloud.databricks.com"
   token = module.aws_create_sp.staging_service_principal_token
 }
 
 provider "databricks" {
   alias = "prod_sp"
-  host  = "https://your-prod-workspace.cloud.databricks.com"
+  host  = "https://dbc-96a52355-626c.cloud.databricks.com"
   token = module.aws_create_sp.prod_service_principal_token
 }
 
