@@ -7,7 +7,7 @@ from pyspark.sql.types import FloatType, IntegerType, StringType, TimestampType
 from pytz import timezone
 import sys 
 sys.path.append("../steps")
-from preprocess import Preprocess
+from steps.preprocess import Preprocess
 
 
 @udf(returnType=StringType())
