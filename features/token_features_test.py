@@ -27,14 +27,14 @@ def test_token_features_fn(spark):
     
     input_df = pd.DataFrame(
         {
-            "InvoiceNo": "536365",
-            "StockCode": "85123A",
-            "Description": "WHITE HANGING HEART T-LIGHT HOLDER ",
-            "Quantity": "6",
-            "InvoiceDate": "12/1/10 8:26",
-            "UnitPrice": "2.55",
-            "CustomerID": "17850",
-            "Country": "United Kingdom"
+            "InvoiceNo": ["536365"],
+            "StockCode": ["85123A"],
+            "Description": ["WHITE HANGING HEART T-LIGHT HOLDER "],
+            "Quantity": ["6"],
+            "InvoiceDate": ["12/1/10 8:26"],
+            "UnitPrice": ["2.55"],
+            "CustomerID": ["17850"],
+            "Country": ["United Kingdom"]
         }
     )
     spark_df = spark.createDataFrame(input_df)
