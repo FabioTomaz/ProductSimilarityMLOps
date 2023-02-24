@@ -26,7 +26,7 @@
 # Provide them via DB widgets or notebook arguments.
 #
 # A Hive-registered Delta table containing the input data.
-dbutils.widgets.text("input_table_path", "/databricks-datasets/nyctaxi-with-zipcodes/subsampled", label="Input Table Name")
+dbutils.widgets.text("input_table_path", "/user/hive/warehouse/invoices", label="Input Table Name")
 # Input start date. 
 dbutils.widgets.text("input_start_date", "", label="Input Start Date")
 # Input end date.
@@ -36,10 +36,10 @@ dbutils.widgets.text("input_end_date", "", label="Input End Date")
 dbutils.widgets.text("timestamp_column", "tpep_pickup_datetime", label="Timestamp column")
 
 # Feature table to store the computed features.
-dbutils.widgets.text("output_table_name", "feature_store_taxi_example.trip_pickup_features", label="Output Feature Table Name")
+dbutils.widgets.text("output_table_name", "feature_store_product.description", label="Output Feature Table Name")
 
 # Feature transform module name.
-dbutils.widgets.text("features_transform_module", "pickup_features", label="Features transform file.")
+dbutils.widgets.text("features_transform_module", "token_features", label="Features transform file.")
 # Primary Keys columns for the feature table;
 dbutils.widgets.text("primary_keys", "zip", label="Primary keys columns for the feature table, comma separated.")
 

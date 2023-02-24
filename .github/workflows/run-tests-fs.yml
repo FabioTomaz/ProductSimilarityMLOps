@@ -50,42 +50,15 @@ jobs:
             "run_name": "features-training-integration-test",
             "tasks": [
               {
-                "task_key": "pickup-features",
+                "task_key": "product-description-features",
                 "notebook_task": {
                   "notebook_path": "notebooks/GenerateAndWriteFeatures", 
                   "base_parameters": {
                     "test_mode": "True",
-                    "input_table_path": "/databricks-datasets/nyctaxi-with-zipcodes/subsampled",
+                    "input_table_path": "/user/hive/warehouse/invoices",
                     "timestamp_column": "tpep_pickup_datetime",
-                    "output_table_name": "feature_store_taxi_example.trip_pickup_features_test",
-                    "features_transform_module": "pickup_features",
-                    "primary_keys": "zip"
-                  }
-                },
-                "new_cluster": {
-                  "spark_version": "11.0.x-cpu-ml-scala2.12",
-                  "node_type_id": "${{ env.NODE_TYPE_ID }}",
-                  "num_workers": 0,
-                  "spark_conf": {
-                    "spark.databricks.cluster.profile": "singleNode",
-                    "spark.master": "local[*, 4]"
-                  },
-                  "custom_tags": {
-                    "ResourceClass": "SingleNode",
-                    "clusterSource": "mlops-stack/0.0"
-                  }
-                }
-              },
-              {
-                "task_key": "dropoff-features",
-                "notebook_task": {
-                  "notebook_path": "notebooks/GenerateAndWriteFeatures",
-                  "base_parameters": {                    
-                    "test_mode": "True",
-                    "input_table_path": "/databricks-datasets/nyctaxi-with-zipcodes/subsampled",
-                    "timestamp_column": "tpep_dropoff_datetime",
-                    "output_table_name": "feature_store_taxi_example.trip_dropoff_features_test",
-                    "features_transform_module": "dropoff_features",
+                    "output_table_name": "feature_store_product.descriptions",
+                    "features_transform_module": "token_features",
                     "primary_keys": "zip"
                   }
                 },
@@ -107,17 +80,14 @@ jobs:
                 "task_key": "training",
                 "depends_on": [
                   {
-                    "task_key": "dropoff-features"
-                  },
-                  {
-                    "task_key": "pickup-features"
+                    "task_key": "product-description-features"
                   }
                 ],
                 "notebook_task": {
                   "notebook_path": "notebooks/TrainWithFeatureStore",
                   "base_parameters": {
                     "test_mode": "True",
-                    "training_data_path": "/databricks-datasets/nyctaxi-with-zipcodes/subsampled",
+                    "training_data_path": "/user/hive/warehouse/invoices",
                     "experiment_name": "/Shared/my-mlops-project/my-mlops-project-experiment-test",
                     "model_name": "my-mlops-project-model-test",
                     "fs_stage": "_test"

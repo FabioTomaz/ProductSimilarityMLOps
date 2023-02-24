@@ -21,7 +21,7 @@
 # Provide them via DB widgets or notebook arguments.
 
 # Path to the Hive-registered Delta table containing the training data.
-dbutils.widgets.text("training_data_path", "/databricks-datasets/nyctaxi-with-zipcodes/subsampled", label="Path to the training data")
+dbutils.widgets.text("training_data_path", "/user/hive/warehouse/invoices", label="Path to the training data")
 
 # MLflow experiment name.
 dbutils.widgets.text("experiment_name", "/Shared/my-mlops-project/my-mlops-project-experiment-test", label="MLflow experiment name")
@@ -64,34 +64,22 @@ from datetime import timedelta, timezone
 import mlflow.pyfunc
 
 
-def rounded_unix_timestamp(dt, num_minutes=15):
-    """
-    Ceilings datetime dt to interval num_minutes, then returns the unix timestamp.
-    """
-    nsecs = dt.minute * 60 + dt.second + dt.microsecond * 1e-6
-    delta = math.ceil(nsecs / (60 * num_minutes)) * (60 * num_minutes) - nsecs
-    return int((dt + timedelta(seconds=delta)).replace(tzinfo=timezone.utc).timestamp())
-
-rounded_unix_timestamp_udf = udf(rounded_unix_timestamp, IntegerType())
-
-
-def rounded_taxi_data(taxi_data_df):
+def preprocess(raw_df):
     # Round the taxi data timestamp to 15 and 30 minute intervals so we can join with the pickup and dropoff features
     # respectively.
-    taxi_data_df = (
-        taxi_data_df.withColumn(
-            "rounded_pickup_datetime",
-            to_timestamp(rounded_unix_timestamp_udf(taxi_data_df["tpep_pickup_datetime"], lit(15))),
-        )
-            .withColumn(
-            "rounded_dropoff_datetime",
-            to_timestamp(rounded_unix_timestamp_udf(taxi_data_df["tpep_dropoff_datetime"], lit(30))),
-        )
-            .drop("tpep_pickup_datetime")
-            .drop("tpep_dropoff_datetime")
-    )
-    taxi_data_df.createOrReplaceTempView("taxi_data")
-    return taxi_data_df
+    df = raw_df.toPandas()
+
+    df.dropna(inplace=True)
+    df['StockCode']= df['StockCode'].astype(str)
+    products = df[["StockCode"]]
+    products.drop_duplicates(inplace=True, subset='StockCode', keep="last")
+
+    # create product-ID and product-description dictionary
+    products_df=spark.createDataFrame(products) 
+
+    products_df.createOrReplaceTempView("token_data")
+
+    return products_df
 
 
 def get_latest_model_version(model_name):
@@ -108,8 +96,8 @@ def get_latest_model_version(model_name):
 
 # DBTITLE 1, Read taxi data for training
 
-taxi_data = rounded_taxi_data(raw_data)
-display(taxi_data)
+product_descriptions_df = preprocess(raw_data)
+display(product_descriptions_df)
 
 # COMMAND ----------
 
@@ -118,8 +106,7 @@ display(taxi_data)
 from databricks.feature_store import FeatureLookup
 import mlflow
 
-pickup_features_table = "feature_store_taxi_example.trip_pickup_features"+fs_stage
-dropoff_features_table = "feature_store_taxi_example.trip_dropoff_features"+fs_stage
+pickup_features_table = "feature_store_product.descriptions"+fs_stage
 
 pickup_feature_lookups = [
     FeatureLookup(
@@ -127,15 +114,6 @@ pickup_feature_lookups = [
         feature_names = ["mean_fare_window_1h_pickup_zip", "count_trips_window_1h_pickup_zip"],
         lookup_key = ["pickup_zip"],
         timestamp_lookup_key = ["rounded_pickup_datetime"]
-    ),
-]
-
-dropoff_feature_lookups = [
-    FeatureLookup(
-        table_name = dropoff_features_table,
-        feature_names = ["count_trips_window_30m_dropoff_zip", "dropoff_is_weekend"],
-        lookup_key = ["dropoff_zip"],
-        timestamp_lookup_key = ["rounded_dropoff_datetime"]
     ),
 ]
 
@@ -152,16 +130,15 @@ mlflow.start_run()
 
 # Since the rounded timestamp columns would likely cause the model to overfit the data 
 # unless additional feature engineering was performed, exclude them to avoid training on them.
-exclude_columns = ["rounded_pickup_datetime", "rounded_dropoff_datetime"]
+#exclude_columns = ["rounded_pickup_datetime", "rounded_dropoff_datetime"]
 
 fs = feature_store.FeatureStoreClient()
 
 # Create the training set that includes the raw input data merged with corresponding features from both feature tables
 training_set = fs.create_training_set(
-    taxi_data,
-    feature_lookups = pickup_feature_lookups + dropoff_feature_lookups,
-    label = "fare_amount",
-    exclude_columns = exclude_columns
+    product_descriptions_df,
+    feature_lookups = pickup_feature_lookups,
+    #exclude_columns = exclude_columns
 )
 
 # Load the TrainingSet into a dataframe which can be passed into sklearn for training a model
@@ -182,44 +159,108 @@ display(training_df)
 
 from sklearn.model_selection import train_test_split
 from mlflow.tracking import MlflowClient
-import lightgbm as lgb
-import mlflow.lightgbm
-from mlflow.models.signature import infer_signature
+from sys import version_info
+from tqdm import tqdm
+
+from gensim.models import Word2Vec 
+
+#import umap
+#import matplotlib.pyplot as plt
+#%matplotlib inline
+import warnings;
+warnings.filterwarnings('ignore')
+
+import mlflow
+import mlflow.pyfunc
+
+import sys
+sys.path.append("../steps")
+
+from models.word2vec_wrapper import CONDA_ENV, GensimModelWrapper
 
 features_and_label = training_df.columns
 
 # Collect data into a Pandas array for training
 data = training_df.toPandas()[features_and_label]
 
-train, test = train_test_split(data, random_state=123)
-X_train = train.drop(["fare_amount"], axis=1)
-X_test = test.drop(["fare_amount"], axis=1)
-y_train = train.fare_amount
-y_test = test.fare_amount
+#train, test = train_test_split(data, random_state=123)
+#X_train = train.drop(["fare_amount"], axis=1)
+#X_test = test.drop(["fare_amount"], axis=1)
+#y_train = train.fare_amount
+#y_test = test.fare_amount
 
-mlflow.lightgbm.autolog()
-train_lgb_dataset = lgb.Dataset(X_train, label=y_train.values)
-test_lgb_dataset = lgb.Dataset(X_test, label=y_test.values)
+#mlflow.lightgbm.autolog()
+#train_lgb_dataset = lgb.Dataset(X_train, label=y_train.values)
+#test_lgb_dataset = lgb.Dataset(X_test, label=y_test.values)
 
-param = {"num_leaves": 32, "objective": "regression", "metric": "rmse"}
-num_rounds = 100
+#param = {"num_leaves": 32, "objective": "regression", "metric": "rmse"}
 
-# Train a lightGBM model
-model = lgb.train(
-    param, train_lgb_dataset, num_rounds
+# Hyperparameters
+window=10
+sg=1
+hs=0
+negative=10
+alpha=0.03
+min_alpha=0.0007
+seed=14
+epochs=10
+
+mlflow.log_param('window', window)
+mlflow.log_param('sg', sg)
+mlflow.log_param('hs', hs)
+mlflow.log_param('negative', negative)
+mlflow.log_param('alpha', alpha)
+mlflow.log_param('min_alpha', min_alpha)
+mlflow.log_param('seed', seed)
+mlflow.log_param('epochs', epochs)
+
+
+# train word2vec model
+model = Word2Vec(
+    window = window, 
+    sg = sg, 
+    hs = hs,
+    negative = negative, # for negative sampling
+    alpha=alpha, 
+    min_alpha=min_alpha,
+    seed = seed
 )
+
+#num_rounds = 100
+# Train a lightGBM model
+#model = lgb.train(
+#    param, train_lgb_dataset, num_rounds
+#)
+
+model.build_vocab(data, progress_per=200)
+
+model.train(
+    data, 
+    total_examples = model.corpus_count, 
+    epochs=epochs, 
+    report_delay=1
+)
+
+wrappedModel = GensimModelWrapper(model)
 
 # COMMAND ----------
 # DBTITLE 1, Log model and return output.
 
 # Log the trained model with MLflow and package it with feature lookup information.
-fs.log_model(
-    model,
-    artifact_path="model_packaged",
-    flavor=mlflow.lightgbm,
-    training_set=training_set,
-    registered_model_name=model_name
+#fs.log_model(
+#    model,
+#    artifact_path="model_packaged",
+#    flavor=mlflow.lightgbm,
+#    training_set=training_set,
+#    registered_model_name=model_name
+#)
+
+mlflow.pyfunc.log_model(
+    "model_packaged", 
+    python_model=wrappedModel, 
+    conda_env=CONDA_ENV
 )
+
 
 # Build out the MLflow model registry URL for this model version.
 workspace_url = spark.conf.get("spark.databricks.workspaceUrl")
