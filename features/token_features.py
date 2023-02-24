@@ -24,7 +24,7 @@ def _filter_df_by_ts(df, ts_column, start_date, end_date):
     return df
 
 
-def compute_features_fn(input_df, timestamp_column, start_date, end_date, sp=None):
+def compute_features_fn(input_df, timestamp_column, start_date, end_date, spark=None):
     """
      Contains logic to compute features.
  
@@ -43,8 +43,6 @@ def compute_features_fn(input_df, timestamp_column, start_date, end_date, sp=Non
      :param end_date:  End date of the feature computation interval.
      :return: Output dataframe containing computed features given the input arguments.
     """
-    if spark is None:
-        spark=sp
     df = input_df.toPandas()
     df.dropna(inplace=True)
     df['StockCode']= df['StockCode'].astype(str)

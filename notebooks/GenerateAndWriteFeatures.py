@@ -91,6 +91,7 @@ features_df = compute_features_fn(
     timestamp_column=ts_column,
     start_date=input_start_date,
     end_date=input_end_date,
+    spark=spark
 )
 
 # COMMAND ----------
