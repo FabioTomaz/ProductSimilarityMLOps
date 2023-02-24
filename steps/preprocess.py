@@ -17,7 +17,7 @@ class Preprocess():
             filter_pos: list of POS strings. POS need to be filtered during tokenization.
         '''
         if stopwords_path=='':
-            stopwords_path = os.path.join(os.path.dirname(__file__),"../data/stopwords_en.txt")
+            stopwords_path = os.path.join(os.path.dirname(__file__),"../data/stopwords_en.csv")
                     
         self.stopwords = open(stopwords_path).read().strip().split('\n')
         self.stopwords.extend(filter_words) 
