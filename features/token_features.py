@@ -3,7 +3,7 @@ This sample module contains  features logic that can be used to generate and pop
 You should plug in your own features computation logic in the compute_features_fn method below.
 """
 from pyspark.sql.functions import *
-from pyspark.sql.types import FloatType, IntegerType, StringType, TimestampType
+from pyspark.sql.types import StringType
 from pytz import timezone
 import sys 
 sys.path.append("../steps")
@@ -24,7 +24,7 @@ def _filter_df_by_ts(df, ts_column, start_date, end_date):
     return df
 
 
-def compute_features_fn(input_df, timestamp_column, start_date, end_date):
+def compute_features_fn(input_df, timestamp_column, start_date, end_date, sp=None):
     """
      Contains logic to compute features.
  
@@ -43,8 +43,9 @@ def compute_features_fn(input_df, timestamp_column, start_date, end_date):
      :param end_date:  End date of the feature computation interval.
      :return: Output dataframe containing computed features given the input arguments.
     """
+    if spark is None:
+        spark=sp
     df = input_df.toPandas()
-    df.head()
     df.dropna(inplace=True)
     df['StockCode']= df['StockCode'].astype(str)
     products = df[["StockCode", "Description"]]

@@ -38,6 +38,6 @@ def test_token_features_fn(spark):
         }
     )
     spark_df = spark.createDataFrame(input_df)
-    output_df = compute_features_fn(spark_df, None, None,  None)
+    output_df = compute_features_fn(spark_df, None, None, None, sp=spark)
     assert isinstance(output_df, pyspark.sql.DataFrame)
     assert output_df.count() == 1 # 4 15-min intervals over 1 hr window.
