@@ -138,7 +138,8 @@ fs = feature_store.FeatureStoreClient()
 training_set = fs.create_training_set(
     product_descriptions_df,
     feature_lookups = pickup_feature_lookups,
-    #exclude_columns = exclude_columns
+    #exclude_columns = exclude_columns,
+    label=None 
 )
 
 # Load the TrainingSet into a dataframe which can be passed into sklearn for training a model
