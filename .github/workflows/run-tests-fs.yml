@@ -57,9 +57,9 @@ jobs:
                     "test_mode": "True",
                     "input_table_path": "/user/hive/warehouse/invoices",
                     "timestamp_column": "tpep_pickup_datetime",
-                    "output_table_name": "feature_store_product.descriptions",
+                    "output_table_name": "feature_store_product.descriptions_test",
                     "features_transform_module": "token_features",
-                    "primary_keys": "zip"
+                    "primary_keys": "StockCode"
                   }
                 },
                 "new_cluster": {

@@ -49,6 +49,7 @@ def compute_features_fn(input_df, timestamp_column, start_date, end_date, spark=
     df['StockCode']= df['StockCode'].astype(str)
     products = df[["StockCode", "Description"]]
     products.drop_duplicates(inplace=True, subset='StockCode', keep="last")
+
     preprocess = Preprocess()
     preprocessed_data = preprocess.preprocess(products["Description"].to_list())
 

@@ -36,7 +36,7 @@ dbutils.widgets.text("input_end_date", "", label="Input End Date")
 dbutils.widgets.text("timestamp_column", "tpep_pickup_datetime", label="Timestamp column")
 
 # Feature table to store the computed features.
-dbutils.widgets.text("output_table_name", "feature_store_product.description", label="Output Feature Table Name")
+dbutils.widgets.text("output_table_name", "feature_store_product.descriptions", label="Output Feature Table Name")
 
 # Feature transform module name.
 dbutils.widgets.text("features_transform_module", "token_features", label="Features transform file.")
