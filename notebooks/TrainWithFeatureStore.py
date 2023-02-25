@@ -112,7 +112,7 @@ pickup_features_table = "feature_store_product.descriptions"+fs_stage
 pickup_feature_lookups = [
     FeatureLookup(
         table_name = pickup_features_table,
-        feature_names = ["mean_fare_window_1h_pickup_zip", "count_trips_window_1h_pickup_zip"],
+        feature_names = ["description_preprocessed"],
         lookup_key = ["pickup_zip"],
         timestamp_lookup_key = ["rounded_pickup_datetime"]
     ),
