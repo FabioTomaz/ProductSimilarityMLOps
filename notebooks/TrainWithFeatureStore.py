@@ -109,12 +109,12 @@ import mlflow
 
 pickup_features_table = "feature_store_product.descriptions"+fs_stage
 
-pickup_feature_lookups = [
+product_description_feature_lookups = [
     FeatureLookup(
         table_name = pickup_features_table,
         feature_names = ["description_preprocessed"],
-        lookup_key = ["pickup_zip"],
-        timestamp_lookup_key = ["rounded_pickup_datetime"]
+        lookup_key = ["StockCode"],
+#        timestamp_lookup_key = ["rounded_pickup_datetime"]
     ),
 ]
 
@@ -138,7 +138,7 @@ fs = feature_store.FeatureStoreClient()
 # Create the training set that includes the raw input data merged with corresponding features from both feature tables
 training_set = fs.create_training_set(
     product_descriptions_df,
-    feature_lookups = pickup_feature_lookups,
+    feature_lookups = product_description_feature_lookups,
     #exclude_columns = exclude_columns,
     label=None 
 )
