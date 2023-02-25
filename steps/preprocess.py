@@ -93,7 +93,7 @@ class Preprocess():
         tokens_list = self.tokenize(ptexts, drop_stopwords)
         # join by sep
         result = [sep.join(tokens) for tokens in tokens_list]
-        return result
+        return tokens_list
 
 
 if __name__ == '__main__':
