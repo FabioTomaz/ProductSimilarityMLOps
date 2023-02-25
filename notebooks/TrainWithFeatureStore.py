@@ -178,7 +178,7 @@ import mlflow.pyfunc
 import sys
 sys.path.append("../steps")
 
-from models.word2vec_wrapper import CONDA_ENV, GensimModelWrapper
+from steps.models.word2vec_wrapper import CONDA_ENV, GensimModelWrapper
 
 features_and_label = training_df.columns
 
