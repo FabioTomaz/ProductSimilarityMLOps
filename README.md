@@ -1,4 +1,6 @@
-# my-mlops-project
+# Product Similarity MLOps Project
+
+A simple MLOps project for product similarity. It includes text preprocessing, representation, and similarity calculation.
 
 This directory contains an ML project based on the default
 [Databricks MLOps Stack](https://github.com/databricks/mlops-stack),
