@@ -44,13 +44,14 @@ def compute_features_fn(input_df, timestamp_column, start_date, end_date, spark=
      :return: Output dataframe containing computed features given the input arguments.
     """
     df = input_df.toPandas()
+
     df.dropna(inplace=True)
     df['StockCode']= df['StockCode'].astype(str)
     products = df[["StockCode", "Description"]]
+    products.drop_duplicates(inplace=True, subset='StockCode', keep="last")
+
     preprocess = Preprocess()
     preprocessed_data = preprocess.preprocess(products["Description"].to_list())
-    # remove duplicates
-    products.drop_duplicates(inplace=True, subset='StockCode', keep="last")
 
     products["description_preprocessed"]=preprocessed_data
 

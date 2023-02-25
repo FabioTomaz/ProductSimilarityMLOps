@@ -41,7 +41,7 @@ dbutils.widgets.text("output_table_name", "feature_store_product.description", l
 # Feature transform module name.
 dbutils.widgets.text("features_transform_module", "token_features", label="Features transform file.")
 # Primary Keys columns for the feature table;
-dbutils.widgets.text("primary_keys", "zip", label="Primary keys columns for the feature table, comma separated.")
+dbutils.widgets.text("primary_keys", "StockCode", label="Primary keys columns for the feature table, comma separated.")
 
 # COMMAND ----------
 import sys
