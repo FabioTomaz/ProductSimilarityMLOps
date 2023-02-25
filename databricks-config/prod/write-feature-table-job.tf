@@ -22,7 +22,7 @@ resource "databricks_job" "write_feature_table_job" {
         timestamp_column          = "tpep_pickup_datetime"
         output_table_name         = "feature_store_product.descriptions"
         features_transform_module = "token_features"
-        primary_keys              = "zip"
+        primary_keys              = "StockCode"
       }
     }
 
