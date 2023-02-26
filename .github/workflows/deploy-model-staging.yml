@@ -17,7 +17,7 @@ on:
         required: true
 
 env:
-  DATABRICKS_HOST: https://your-staging-workspace.cloud.databricks.com
+  DATABRICKS_HOST: https://dbc-38ce632c-4934.cloud.databricks.com
   NODE_TYPE_ID: i3.xlarge
   DATABRICKS_TOKEN: ${{ secrets.STAGING_WORKSPACE_TOKEN }}
 jobs:
@@ -31,5 +31,5 @@ jobs:
         env:
           MLFLOW_TRACKING_URI: databricks
         run: |
-          pip install mlflow
+          pip install -r requirements.txt
           python steps/deploy.py "${{ github.event.inputs.modelUri }}" "staging"

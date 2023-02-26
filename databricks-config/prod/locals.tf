@@ -2,7 +2,7 @@ locals {
   // Base workspace directory under which to create resources in the workspace for the current MLOps project
   // We assume the service principal used to deploy resources has CAN MANAGE permissions on directory
   // You may need to modify this value if you'd like to use a different directory for per-project resources
-  mlflow_experiment_parent_dir = "/my-mlops-project"
+  mlflow_experiment_parent_dir = "/Shared/my-mlops-project"
   // Current environment
   env = "prod"
   // Env-specific prefix to prepend to resource names. We recommend creating staging/prod resources

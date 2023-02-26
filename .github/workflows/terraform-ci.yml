@@ -18,7 +18,7 @@ jobs:
     concurrency: my-mlops-project-staging-terraform-job
     runs-on: ubuntu-20.04
     env:
-      DATABRICKS_HOST: https://your-staging-workspace.cloud.databricks.com
+      DATABRICKS_HOST: https://dbc-38ce632c-4934.cloud.databricks.com
       DATABRICKS_TOKEN: ${{secrets.STAGING_WORKSPACE_TOKEN}}
     steps:
       - uses: actions/checkout@v3
@@ -49,46 +49,46 @@ jobs:
         run: |
           terraform -chdir=staging plan -no-color \
           -var="git_repo_url=${{ github.server_url }}/${{ github.repository }}"
-      - name: Create Comment with Terraform Plan
-        uses: actions/github-script@v6
-        id: comment
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const output = `#### Terraform Staging Format and Style 🖌 \`${{ steps.fmt.outcome }}\`
-            #### Terraform Staging Initialization ⚙️ \`${{ steps.init.outcome }}\`
-            #### Terraform Staging Validation 🤖 \`${{ steps.validate.outcome }}\`
-            <details><summary>Staging Validation Output</summary>
-
-            \`\`\`\n
-            ${{ steps.validate.outputs.stdout }}
-            \`\`\`
-
-            </details>
-
-            #### Terraform Staging Plan 📖 \`${{ steps.plan.outcome }}\`
-
-            <details><summary>Show Staging Plan</summary>
-
-            \`\`\`\n
-            ${process.env.PLAN}
-            \`\`\`
-
-            </details>`
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+      #- name: Create Comment with Terraform Plan
+      #  uses: actions/github-script@v6
+      #  id: comment
+      #  env:
+      #    PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      #  with:
+      #    github-token: ${{ secrets.GITHUB_TOKEN }}
+      #    script: |
+      #      const output = `#### Terraform Staging Format and Style 🖌 \`${{ steps.fmt.outcome }}\`
+      #      #### Terraform Staging Initialization ⚙️ \`${{ steps.init.outcome }}\`
+      #      #### Terraform Staging Validation 🤖 \`${{ steps.validate.outcome }}\`
+      #      <details><summary>Staging Validation Output</summary>
+#
+      #      \`\`\`\n
+      #      ${{ steps.validate.outputs.stdout }}
+      #      \`\`\`
+#
+      #      </details>
+#
+      #      #### Terraform Staging Plan 📖 \`${{ steps.plan.outcome }}\`
+#
+      #      <details><summary>Show Staging Plan</summary>
+#
+      #      \`\`\`\n
+      #      ${process.env.PLAN}
+      #      \`\`\`
+#
+      #      </details>`
+#
+      #      github.rest.issues.createComment({
+      #        issue_number: context.issue.number,
+      #        owner: context.repo.owner,
+      #        repo: context.repo.repo,
+      #        body: output
+      #      })
   prod:
     concurrency: my-mlops-project-prod-terraform-job
     runs-on: ubuntu-20.04
     env:
-      DATABRICKS_HOST: https://your-prod-workspace.cloud.databricks.com
+      DATABRICKS_HOST: https://dbc-96a52355-626c.cloud.databricks.com
       DATABRICKS_TOKEN: ${{secrets.PROD_WORKSPACE_TOKEN}}
     steps:
       - uses: actions/checkout@v3
@@ -114,38 +114,38 @@ jobs:
         run: |
           terraform -chdir=prod plan -no-color \
           -var="git_repo_url=${{ github.server_url }}/${{ github.repository }}"
-      - name: Create Comment with Terraform Plan
-        uses: actions/github-script@v6
-        id: comment
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const output = `#### Terraform Prod Format and Style 🖌 \`${{ steps.fmt.outcome }}\`
-            #### Terraform Prod Initialization ⚙️ \`${{ steps.init.outcome }}\`
-            #### Terraform Prod Validation 🤖 \`${{ steps.validate.outcome }}\`
-            <details><summary>Prod Validation Output</summary>
-
-            \`\`\`\n
-            ${{ steps.validate.outputs.stdout }}
-            \`\`\`
-
-            </details>
-
-            #### Terraform Prod Plan 📖 \`${{ steps.plan.outcome }}\`
-
-            <details><summary>Show Prod Plan</summary>
-
-            \`\`\`\n
-            ${process.env.PLAN}
-            \`\`\`
-
-            </details>`
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+      #- name: Create Comment with Terraform Plan
+      #  uses: actions/github-script@v6
+      #  id: comment
+      #  env:
+      #    PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      #  with:
+      #    github-token: ${{ secrets.GITHUB_TOKEN }}
+      #    script: |
+      #      const output = `#### Terraform Prod Format and Style 🖌 \`${{ steps.fmt.outcome }}\`
+      #      #### Terraform Prod Initialization ⚙️ \`${{ steps.init.outcome }}\`
+      #      #### Terraform Prod Validation 🤖 \`${{ steps.validate.outcome }}\`
+      #      <details><summary>Prod Validation Output</summary>
+#
+      #      \`\`\`\n
+      #      ${{ steps.validate.outputs.stdout }}
+      #      \`\`\`
+#
+      #      </details>
+#
+      #      #### Terraform Prod Plan 📖 \`${{ steps.plan.outcome }}\`
+#
+      #      <details><summary>Show Prod Plan</summary>
+#
+      #      \`\`\`\n
+      #      ${process.env.PLAN}
+      #      \`\`\`
+#
+      #      </details>`
+#
+      #      github.rest.issues.createComment({
+      #        issue_number: context.issue.number,
+      #        owner: context.repo.owner,
+      #        repo: context.repo.repo,
+      #        body: output
+      #      })

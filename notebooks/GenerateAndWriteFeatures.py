@@ -26,7 +26,7 @@
 # Provide them via DB widgets or notebook arguments.
 #
 # A Hive-registered Delta table containing the input data.
-dbutils.widgets.text("input_table_path", "/databricks-datasets/nyctaxi-with-zipcodes/subsampled", label="Input Table Name")
+dbutils.widgets.text("input_table_path", "/user/hive/warehouse/invoices", label="Input Table Name")
 # Input start date. 
 dbutils.widgets.text("input_start_date", "", label="Input Start Date")
 # Input end date.
@@ -36,12 +36,17 @@ dbutils.widgets.text("input_end_date", "", label="Input End Date")
 dbutils.widgets.text("timestamp_column", "tpep_pickup_datetime", label="Timestamp column")
 
 # Feature table to store the computed features.
-dbutils.widgets.text("output_table_name", "feature_store_taxi_example.trip_pickup_features", label="Output Feature Table Name")
+dbutils.widgets.text("output_table_name", "feature_store_product.descriptions", label="Output Feature Table Name")
 
 # Feature transform module name.
-dbutils.widgets.text("features_transform_module", "pickup_features", label="Features transform file.")
+dbutils.widgets.text("features_transform_module", "token_features", label="Features transform file.")
 # Primary Keys columns for the feature table;
-dbutils.widgets.text("primary_keys", "zip", label="Primary keys columns for the feature table, comma separated.")
+dbutils.widgets.text("primary_keys", "StockCode", label="Primary keys columns for the feature table, comma separated.")
+
+# COMMAND ----------
+
+
+# MAGIC %pip install -r ../requirements.txt
 
 # COMMAND ----------
 
@@ -77,6 +82,7 @@ spark.sql("CREATE DATABASE IF NOT EXISTS " + output_database);
 
 # DBTITLE 1, Read input data.
 raw_data = spark.read.format("delta").load(input_table_path)
+raw_data.head()
 
 
 # COMMAND ----------
@@ -93,6 +99,7 @@ features_df = compute_features_fn(
     timestamp_column=ts_column,
     start_date=input_start_date,
     end_date=input_end_date,
+    spark=spark
 )
 
 # COMMAND ----------
@@ -107,7 +114,6 @@ fs = feature_store.FeatureStoreClient()
 fs.create_table(
     name=output_table_name,
     primary_keys=[x.strip() for x in pk_columns.split(",")],
-    timestamp_keys=[ts_column],
     df=features_df,
 )
 

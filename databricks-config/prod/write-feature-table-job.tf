@@ -11,20 +11,18 @@ resource "databricks_job" "write_feature_table_job" {
   }
 
   task {
-    task_key = "PickupFeatures"
+    task_key = "ProductDescriptionFeatures"
 
     notebook_task {
       notebook_path = "notebooks/GenerateAndWriteFeatures"
       base_parameters = {
-        # TODO modify these arguments to reflect your setup.
-        input_table_path = "/databricks-datasets/nyctaxi-with-zipcodes/subsampled"
-        # TODO: Empty start/end dates will process the whole range. Update this as needed to process recent data.
+        input_table_path = "/user/hive/warehouse/invoices"
         input_start_date          = ""
         input_end_date            = ""
         timestamp_column          = "tpep_pickup_datetime"
-        output_table_name         = "feature_store_taxi_example.trip_pickup_features"
-        features_transform_module = "pickup_features"
-        primary_keys              = "zip"
+        output_table_name         = "feature_store_product.descriptions"
+        features_transform_module = "token_features"
+        primary_keys              = "StockCode"
       }
     }
 
@@ -36,31 +34,57 @@ resource "databricks_job" "write_feature_table_job" {
     }
   }
 
-  task {
-    task_key = "DropoffFeatures"
-
-    notebook_task {
-      notebook_path = "notebooks/GenerateAndWriteFeatures"
-      base_parameters = {
-        # TODO: modify these arguments to reflect your setup.
-        input_table_path = "/databricks-datasets/nyctaxi-with-zipcodes/subsampled"
-        # TODO: Empty start/end dates will process the whole range. Update this as needed to process recent data.
-        input_start_date          = ""
-        input_end_date            = ""
-        timestamp_column          = "tpep_dropoff_datetime"
-        output_table_name         = "feature_store_taxi_example.trip_dropoff_features"
-        features_transform_module = "dropoff_features"
-        primary_keys              = "zip"
-      }
-    }
-
-    new_cluster {
-      num_workers   = 3
-      spark_version = "11.0.x-cpu-ml-scala2.12"
-      node_type_id  = "i3.xlarge"
-      custom_tags   = { "clusterSource" = "mlops-stack/0.0" }
-    }
-  }
+  #task {
+  #  task_key = "PickupFeatures"
+#
+  #  notebook_task {
+  #    notebook_path = "notebooks/GenerateAndWriteFeatures"
+  #    base_parameters = {
+  #      # TODO modify these arguments to reflect your setup.
+  #      input_table_path = "/databricks-datasets/nyctaxi-with-zipcodes/subsampled"
+  #      # TODO: Empty start/end dates will process the whole range. Update this as needed to process recent data.
+  #      input_start_date          = ""
+  #      input_end_date            = ""
+  #      timestamp_column          = "tpep_pickup_datetime"
+  #      output_table_name         = "feature_store_taxi_example.trip_pickup_features"
+  #      features_transform_module = "pickup_features"
+  #      primary_keys              = "zip"
+  #    }
+  #  }
+#
+  #  new_cluster {
+  #    num_workers   = 3
+  #    spark_version = "11.0.x-cpu-ml-scala2.12"
+  #    node_type_id  = "i3.xlarge"
+  #    custom_tags   = { "clusterSource" = "mlops-stack/0.0" }
+  #  }
+  #}
+#
+  #task {
+  #  task_key = "DropoffFeatures"
+#
+  #  notebook_task {
+  #    notebook_path = "notebooks/GenerateAndWriteFeatures"
+  #    base_parameters = {
+  #      # TODO: modify these arguments to reflect your setup.
+  #      input_table_path = "/databricks-datasets/nyctaxi-with-zipcodes/subsampled"
+  #      # TODO: Empty start/end dates will process the whole range. Update this as needed to process recent data.
+  #      input_start_date          = ""
+  #      input_end_date            = ""
+  #      timestamp_column          = "tpep_dropoff_datetime"
+  #      output_table_name         = "feature_store_taxi_example.trip_dropoff_features"
+  #      features_transform_module = "dropoff_features"
+  #      primary_keys              = "zip"
+  #    }
+  #  }
+#
+  #  new_cluster {
+  #    num_workers   = 3
+  #    spark_version = "11.0.x-cpu-ml-scala2.12"
+  #    node_type_id  = "i3.xlarge"
+  #    custom_tags   = { "clusterSource" = "mlops-stack/0.0" }
+  #  }
+  #}
 
   git_source {
     url      = var.git_repo_url

@@ -21,9 +21,9 @@
 # Name of the current environment
 dbutils.widgets.dropdown("env", "dev", ["dev", "staging", "prod"], "Environment Name")
 # A Hive-registered Delta table containing the input features.
-dbutils.widgets.text("input_table_name", "", label="Input Table Name")
+dbutils.widgets.text("input_table_name", "invoices", label="Input Table Name")
 # Delta table to store the output predictions.
-dbutils.widgets.text("output_table_name", "", label="Output Table Name")
+dbutils.widgets.text("output_table_name", "similar_products_predict", label="Output Table Name")
 
 # COMMAND ----------
 

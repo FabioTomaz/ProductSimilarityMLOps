@@ -28,8 +28,8 @@ to other CI/CD providers by running the same shell commands, with a few caveats:
 ### Verify permissions
 To use the scripts, you must:
 * Be a Databricks workspace admin in the staging and prod workspaces. Verify that you're an admin by viewing the
-  [staging workspace admin console](https://your-staging-workspace.cloud.databricks.com#setting/accounts) and
-  [prod workspace admin console](https://your-prod-workspace.cloud.databricks.com#setting/accounts). If
+  [staging workspace admin console](https://dbc-38ce632c-4934.cloud.databricks.com#setting/accounts) and
+  [prod workspace admin console](https://dbc-96a52355-626c.cloud.databricks.com#setting/accounts). If
   the admin console UI loads instead of the Databricks workspace homepage, you are an admin.
 * Be able to create Git tokens with permission to check out the current repository
 * Have permission to manage AWS IAM users and attached IAM policies (`"iam:*"` permissions) in the current AWS account.
@@ -46,19 +46,19 @@ To use the scripts, you must:
 
 ### Configure Databricks auth
 * Configure a Databricks CLI profile for your staging workspace by running
-  ``databricks configure --token --profile "my-mlops-project-staging" --host https://your-staging-workspace.cloud.databricks.com``, 
+  ``databricks configure --token --profile "my-mlops-project-staging" --host https://dbc-38ce632c-4934.cloud.databricks.com``, 
   which will prompt you for a REST API token
 * Create a [Databricks REST API token](https://docs.databricks.com/dev-tools/api/latest/authentication.html#generate-a-personal-access-token)
-  in the staging workspace ([link](https://your-staging-workspace.cloud.databricks.com#setting/account))
+  in the staging workspace ([link](https://dbc-38ce632c-4934.cloud.databricks.com#setting/account))
   and paste the value into the prompt.
-* Configure a Databricks CLI for your prod workspace by running ``databricks configure --token --profile "my-mlops-project-prod" --host https://your-prod-workspace.cloud.databricks.com``
-* Create a Databricks REST API token in the prod workspace ([link](https://your-prod-workspace.cloud.databricks.com#setting/account)).
+* Configure a Databricks CLI for your prod workspace by running ``databricks configure --token --profile "my-mlops-project-prod" --host https://dbc-96a52355-626c.cloud.databricks.com``
+* Create a Databricks REST API token in the prod workspace ([link](https://dbc-96a52355-626c.cloud.databricks.com#setting/account)).
   and paste the value into the prompt
 
 ### Set up service principal user group
 Ensure a group named `my-mlops-project-service-principals` exists in the staging and prod workspace, e.g.
-by checking for the group in the [staging workspace admin console](https://your-staging-workspace.cloud.databricks.com#setting/accounts/groups) and
-[prod workspace admin console](https://your-prod-workspace.cloud.databricks.com#setting/accounts/groups).
+by checking for the group in the [staging workspace admin console](https://dbc-38ce632c-4934.cloud.databricks.com#setting/accounts/groups) and
+[prod workspace admin console](https://dbc-96a52355-626c.cloud.databricks.com#setting/accounts/groups).
 Create the group in staging and/or prod as needed.
 Then, grant the `my-mlops-project-service-principals` group [token usage permissions](https://docs.databricks.com/administration-guide/access-control/tokens.html#manage-token-permissions-using-the-admin-console)
 ### Obtain a git token for use in CI/CD
@@ -83,17 +83,17 @@ From the repo root directory, run:
 
 ```
 # Set AWS_REGION environment variable to your desired AWS region for storing
-# terraform state, e.g. "us-east-1" to store Terraform state in S3 buckets in us-east-1
-# NOTE: if you supply an AWS region other than us-east-1, be sure to update the
+# terraform state, e.g. "eu-west-2" to store Terraform state in S3 buckets in eu-west-2
+# NOTE: if you supply an AWS region other than eu-west-2, be sure to update the
 # AWS region specified in databricks-config/staging/provider.tf and databricks-config/prod/provider.tf
 # to match
-export AWS_REGION="us-east-1"
+export AWS_REGION="eu-west-2"
 python .mlops-setup-scripts/terraform/bootstrap.py
 ```
 Then, run the following command, providing the required vars to bootstrap CI/CD.
 ```
 python .mlops-setup-scripts/cicd/bootstrap.py \
-  --var github_repo_url=https://github.com/<your-org>/<your-repo-name> \
+  --var github_repo_url=https://github.com/FabioTomaz/my-mlops-project \
   --var git_token=<your-git-token>
 ```
 
