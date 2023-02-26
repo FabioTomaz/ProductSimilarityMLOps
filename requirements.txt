@@ -6,3 +6,8 @@ matplotlib>=3.5.2
 Jinja2==3.0.3
 pyspark~=3.3.0
 pytz~=2022.2.1
+gensim==3.8.3
+umap-learn
+tqdm
+#torch>=1.4.0+cu101
+#transformers>=2.3.0

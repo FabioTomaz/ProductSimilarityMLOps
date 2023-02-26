@@ -1,0 +1,23 @@
+name: product-recommender-env2
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+    - mlflow==2.0.1
+    - numpy>=1.23.0
+    - pandas>=1.4.3
+    - scikit-learn>=1.1.1
+    - matplotlib>=3.5.2
+    - Jinja2==3.0.3
+    - pyspark~=3.3.0
+    - pytz~=2022.2.1
+    - gensim==3.8.3
+    - umap-learn
+    - tqdm
+    - pytest>=7.1.2
+
+#  - torch>=1.4.0+cu101
+#  - transformers>=2.3.0

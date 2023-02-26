@@ -16,9 +16,10 @@ resource "databricks_job" "model_training_job" {
     notebook_task {
       notebook_path = "notebooks/TrainWithFeatureStore"
       base_parameters = {
-        training_data_path = "/databricks-datasets/nyctaxi-with-zipcodes/subsampled"
+        training_data_path = "/user/hive/warehouse/invoices"
         experiment_name    = databricks_mlflow_experiment.experiment.name
         model_name         = "${local.env_prefix}my-mlops-project-model"
+        fs_stage           = "_staging"
       }
     }
 
