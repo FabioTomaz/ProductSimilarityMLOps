@@ -45,6 +45,7 @@ dbutils.widgets.text("primary_keys", "StockCode", label="Primary keys columns fo
 
 # COMMAND ----------
 
+
 # MAGIC %pip install -r ../requirements.txt
 
 # COMMAND ----------
