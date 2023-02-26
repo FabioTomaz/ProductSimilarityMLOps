@@ -16,6 +16,10 @@
 
 # COMMAND ----------
 
+# MAGIC %pip install -r ../requirements.txt
+
+# COMMAND ----------
+
 # DBTITLE 1, Notebook arguments
 # List of input args needed to run this notebook as a job.
 # Provide them via DB widgets or notebook arguments.

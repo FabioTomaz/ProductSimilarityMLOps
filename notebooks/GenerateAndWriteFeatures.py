@@ -1,8 +1,4 @@
 # Databricks notebook source
-# MAGIC %pip install -r ../requirements.txt
-
-# COMMAND ----------
-
 ##################################################################################
 # Generate and Write Features Notebook
 #
@@ -46,6 +42,10 @@ dbutils.widgets.text("output_table_name", "feature_store_product.descriptions", 
 dbutils.widgets.text("features_transform_module", "token_features", label="Features transform file.")
 # Primary Keys columns for the feature table;
 dbutils.widgets.text("primary_keys", "StockCode", label="Primary keys columns for the feature table, comma separated.")
+
+# COMMAND ----------
+
+# MAGIC %pip install -r ../requirements.txt
 
 # COMMAND ----------
 

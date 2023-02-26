@@ -27,11 +27,17 @@
 dbutils.widgets.dropdown("env", "None", ["None", "staging", "prod"], "Environment Name")
 
 # COMMAND ----------
+
+# MAGIC %pip install -r ../requirements.txt
+
+# COMMAND ----------
+
 import sys
 
 sys.path.append("../steps")
 
 # COMMAND ----------
+
 env = dbutils.widgets.get("env")
 model_uri = dbutils.jobs.taskValues.get("Train", "model_uri", debugValue="")
 assert env != "None", "env notebook parameter must be specified"
@@ -51,6 +57,7 @@ cd_trigger_url = f"{github_server}/repos/{github_repo}/actions/workflows/deploy-
 authorization = f"token {token}"
 
 # COMMAND ----------
+
 import requests
 
 response = requests.post(
@@ -64,6 +71,7 @@ assert response.ok, (
 )
 
 # COMMAND ----------
+
 print(
     f"Successfully triggered model CD deployment workflow for {model_uri}. See your CD provider to check the "
     f"status of model deployment"
