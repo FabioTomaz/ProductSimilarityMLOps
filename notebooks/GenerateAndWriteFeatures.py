@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %pip install -r ../requirements.txt
+
+# COMMAND ----------
+
 ##################################################################################
 # Generate and Write Features Notebook
 #
