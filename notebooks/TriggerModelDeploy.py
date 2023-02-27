@@ -40,6 +40,7 @@ sys.path.append("../steps")
 
 env = dbutils.widgets.get("env")
 model_uri = dbutils.jobs.taskValues.get("Train", "model_uri", debugValue="")
+
 assert env != "None", "env notebook parameter must be specified"
 assert model_uri != "", "model_uri notebook parameter must be specified"
 

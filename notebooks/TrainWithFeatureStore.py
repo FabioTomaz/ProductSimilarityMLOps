@@ -99,15 +99,13 @@ def get_latest_model_version(model_name):
 
 # COMMAND ----------
 
-# DBTITLE 1, Read taxi data for training
-
+# DBTITLE 1, Read invoices data for training
 product_descriptions_df = preprocess(raw_data)
 display(product_descriptions_df)
 
 # COMMAND ----------
 
 # DBTITLE 1, Create FeatureLookups
-
 from databricks.feature_store import FeatureLookup
 import mlflow
 
@@ -182,12 +180,12 @@ import mlflow.pyfunc
 import sys
 sys.path.append("../steps")
 
-from steps.models.word2vec_wrapper import CONDA_ENV, GensimModelWrapper
+from steps.models.word2vec_wrapper import GensimModelWrapper
 
 features_and_label = training_df.columns
 
 # Collect data into a Pandas array for training
-data = training_df.toPandas()[features_and_label]
+data = training_df.toPandas()["description_preprocessed"].apply(lambda elem: list(elem)).to_list()  
 
 #train, test = train_test_split(data, random_state=123)
 #X_train = train.drop(["fare_amount"], axis=1)
@@ -247,26 +245,30 @@ model.train(
     report_delay=1
 )
 
+print(model.wv.vocab)
+#model.save("word2vec.model")
+#artifacts = {"gensim_model": word2vec.model}
+#mlflow_pyfunc_model_path = model_name
+
 wrappedModel = GensimModelWrapper(model)
+
+# COMMAND ----------
+
+import pandas as pd
+wrappedModel.predict(None, training_df.toPandas())
 
 # COMMAND ----------
 
 # DBTITLE 1, Log model and return output.
 # Log the trained model with MLflow and package it with feature lookup information.
-#fs.log_model(
-#    model,
-#    artifact_path="model_packaged",
-#    flavor=mlflow.lightgbm,
-#    training_set=training_set,
-#    registered_model_name=model_name
-#)
 
-mlflow.pyfunc.log_model(
-    "model_packaged", 
-    python_model=wrappedModel, 
-    conda_env=CONDA_ENV
+fs.log_model(
+    wrappedModel,
+    artifact_path="model_packaged",
+    flavor=mlflow.pyfunc,
+    training_set=training_set,
+    registered_model_name=model_name
 )
-
 
 # Build out the MLflow model registry URL for this model version.
 workspace_url = spark.conf.get("spark.databricks.workspaceUrl")
